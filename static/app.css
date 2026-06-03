@@ -1,0 +1,970 @@
+/* ===================================================
+   Antigravity Masker Ant-Design (Ant-UI) Theme Styles
+   =================================================== */
+
+/* 1. CSS 变量定义 (设计系统) */
+:root {
+    /* 经典极客蓝 Ant Blue */
+    --ant-primary: #1677ff;
+    --ant-primary-hover: #4096ff;
+    --ant-primary-active: #0958d9;
+    --ant-primary-bg: #e6f4ff;
+    --ant-primary-bg-hover: #bae0ff;
+    
+    /* 亮色模式色彩 */
+    --bg-color: #f5f7fa;
+    --card-bg: #ffffff;
+    --card-border: #f0f0f0;
+    --card-border-hover: #d9d9d9;
+    --text-primary: rgba(0, 0, 0, 0.88);
+    --text-secondary: rgba(0, 0, 0, 0.65);
+    --text-muted: rgba(0, 0, 0, 0.45);
+    --input-bg: #ffffff;
+    --table-header-bg: #fafafa;
+    --table-row-hover: #f5f5f5;
+    
+    /* 提示状态 */
+    --success: #52c41a;
+    --success-bg: #f6ffed;
+    --success-border: #b7eb8f;
+    --warning: #faad14;
+    --warning-bg: #fffbe6;
+    --warning-border: #ffe58f;
+    --danger: #ff4d4f;
+    --danger-bg: #fff1f0;
+    --danger-border: #ffccc7;
+    
+    /* 阴影与圆角 */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    --border-radius: 2px;
+    --border-radius-sm: 2px;
+    --border-radius-lg: 2px;
+    
+    /* 标签高亮色彩 - 亮色模式 */
+    --tag-name-bg: #fff0f6;
+    --tag-name-border: #ffadd2;
+    --tag-name-text: #c41d7f;
+
+    --tag-corp-bg: #e6f4ff;
+    --tag-corp-border: #91caee;
+    --tag-corp-text: #0958d9;
+
+    --tag-contact-bg: #fff7e6;
+    --tag-contact-border: #ffd591;
+    --tag-contact-text: #d46b08;
+
+    --tag-finance-bg: #f6ffed;
+    --tag-finance-border: #b7eb8f;
+    --tag-finance-text: #389e0d;
+
+    --tag-other-bg: #f5f5f5;
+    --tag-other-border: #d9d9d9;
+    --tag-other-text: rgba(0, 0, 0, 0.65);
+}
+
+/* 暗色模式覆盖变量 */
+body.dark-theme {
+    --bg-color: #141414;
+    --card-bg: #1f1f1f;
+    --card-border: #303030;
+    --card-border-hover: #434343;
+    --text-primary: rgba(255, 255, 255, 0.85);
+    --text-secondary: rgba(255, 255, 255, 0.65);
+    --text-muted: rgba(255, 255, 255, 0.45);
+    --input-bg: #141414;
+    --table-header-bg: #1d1d1d;
+    --table-row-hover: #262626;
+    
+    --ant-primary-bg: #111a2c;
+    --ant-primary-bg-hover: #152540;
+    
+    /* 提示状态 - 暗色 */
+    --success-bg: #162312;
+    --success-border: #274e13;
+    --warning-bg: #2b2111;
+    --warning-border: #874d00;
+    --danger-bg: #2a1215;
+    --danger-border: #5c0011;
+    
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 9px 28px 8px rgba(0, 0, 0, 0.3), 0 6px 16px 0 rgba(0, 0, 0, 0.4), 0 3px 6px -4px rgba(0, 0, 0, 0.48);
+
+    /* 标签高亮色彩 - 暗色模式 */
+    --tag-name-bg: #291321;
+    --tag-name-border: #780650;
+    --tag-name-text: #ff7db0;
+
+    --tag-corp-bg: #111a2c;
+    --tag-corp-border: #164e7f;
+    --tag-corp-text: #40a9ff;
+
+    --tag-contact-bg: #2b2111;
+    --tag-contact-border: #874d00;
+    --tag-contact-text: #ffc069;
+
+    --tag-finance-bg: #162312;
+    --tag-finance-border: #274e13;
+    --tag-finance-text: #73d13d;
+
+    --tag-other-bg: #2d2d2d;
+    --tag-other-border: #434343;
+    --tag-other-text: rgba(255, 255, 255, 0.65);
+}
+
+/* 2. 基础重置 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    min-height: 100vh;
+    line-height: 1.5715;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.app-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 3. 头部导航 (Ant PageHeader + Tabs 风格) */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.logo-icon {
+    color: var(--ant-primary);
+}
+.logo-accent {
+    color: var(--ant-primary);
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg-color);
+    padding: 4px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--card-border);
+}
+.nav-tab {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+.nav-tab:hover {
+    color: var(--ant-primary);
+}
+.nav-tab.active {
+    color: var(--ant-primary);
+    background: var(--card-bg);
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+.btn-theme-toggle {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+.btn-theme-toggle:hover {
+    background: var(--table-header-bg);
+    color: var(--ant-primary);
+}
+
+/* 4. 标准卡片与面板 */
+.glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 24px;
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.glass-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--card-border-hover);
+}
+
+.tab-panel {
+    display: none;
+    animation: antFadeIn 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.tab-panel.active {
+    display: block;
+}
+
+/* 5. 上传大屏 */
+.upload-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 0;
+}
+.upload-card {
+    width: 100%;
+    max-width: 600px;
+    border: 1px dashed var(--card-border-hover);
+    background: var(--card-bg);
+    border-radius: var(--border-radius-lg);
+    padding: 48px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+.upload-card:hover, .upload-card.dragover {
+    border-color: var(--ant-primary);
+    background-color: var(--ant-primary-bg);
+}
+.upload-icon-wrapper {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    border: 1px solid var(--card-border);
+    color: var(--ant-primary);
+    transition: transform 0.2s;
+}
+.upload-card:hover .upload-icon-wrapper {
+    transform: scale(1.05);
+}
+.upload-card h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+.upload-card p {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 24px;
+}
+
+/* 6. 按钮系统 (Ant-Design Style) */
+.btn {
+    font-size: 14px;
+    padding: 5px 16px;
+    height: 32px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    user-select: none;
+}
+.btn-primary {
+    background: var(--ant-primary);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: var(--ant-primary-hover);
+}
+.btn-primary:active {
+    background: var(--ant-primary-active);
+}
+.btn-secondary {
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    border-color: var(--card-border);
+}
+.btn-secondary:hover {
+    color: var(--ant-primary);
+    border-color: var(--ant-primary);
+    background: var(--card-bg);
+}
+.btn-outline {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-color: var(--card-border);
+}
+.btn-outline:hover {
+    color: var(--ant-primary);
+    border-color: var(--ant-primary);
+}
+.btn.disabled {
+    color: var(--text-muted) !important;
+    background: var(--table-header-bg) !important;
+    border-color: var(--card-border) !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* 7. 交互式主分栏布局 */
+.split-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 24px;
+    height: calc(100vh - 160px);
+}
+.preview-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+.control-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
+    margin-bottom: 12px;
+}
+.panel-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* 徽章 Badge */
+.badge {
+    padding: 2px 8px;
+    font-size: 12px;
+    border-radius: 2px;
+    background: var(--table-header-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--card-border);
+}
+.badge-info {
+    background: var(--ant-primary-bg);
+    color: var(--ant-primary);
+    border-color: var(--ant-primary-bg-hover);
+}
+
+/* 合同文本阅览器 (白纸质感) */
+.document-viewer {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 12px;
+    font-size: 14px;
+    line-height: 2;
+    color: var(--text-primary);
+}
+.document-viewer p {
+    margin-bottom: 14px;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s;
+    user-select: text;
+}
+.document-viewer p:hover {
+    background: var(--table-header-bg);
+}
+
+/* 表格渲染样式 */
+.docx-table-wrapper {
+    margin: 16px 0;
+    border-collapse: collapse;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+}
+.docx-table-wrapper td {
+    border: 1px solid var(--card-border);
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+/* 8. 敏感词标注高亮块 (Ant Design Tag 风格) */
+.mask-tag {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 7px;
+    height: 22px;
+    margin: 0 4px;
+    font-size: 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: 400;
+    transition: all 0.2s;
+}
+.mask-tag:hover {
+    transform: none;
+    filter: brightness(0.95);
+}
+.mask-tag::after {
+    content: '×';
+    margin-left: 6px;
+    font-weight: bold;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+.mask-tag:hover::after {
+    opacity: 1;
+}
+
+/* 亮/暗色各分类高亮应用变量 */
+.mask-tag-name {
+    background: var(--tag-name-bg);
+    border: 1px solid var(--tag-name-border);
+    color: var(--tag-name-text);
+}
+.mask-tag-corp {
+    background: var(--tag-corp-bg);
+    border: 1px solid var(--tag-corp-border);
+    color: var(--tag-corp-text);
+}
+.mask-tag-contact {
+    background: var(--tag-contact-bg);
+    border: 1px solid var(--tag-contact-border);
+    color: var(--tag-contact-text);
+}
+.mask-tag-finance {
+    background: var(--tag-finance-bg);
+    border: 1px solid var(--tag-finance-border);
+    color: var(--tag-finance-text);
+}
+.mask-tag-other {
+    background: var(--tag-other-bg);
+    border: 1px solid var(--tag-other-border);
+    color: var(--tag-other-text);
+}
+
+/* 分类图例 */
+.category-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    background: var(--table-header-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-sm);
+}
+.category-legend span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.legend-color {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.legend-name { background-color: var(--tag-name-text); }
+.legend-corp { background-color: var(--tag-corp-text); }
+.legend-contact { background-color: var(--tag-contact-text); }
+.legend-finance { background-color: var(--tag-finance-text); }
+.legend-other { background-color: var(--tag-other-text); }
+
+/* 敏感词表格 (Ant Table 风格) */
+.matches-list-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius-sm);
+}
+.matches-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: left;
+}
+.matches-table th {
+    background: var(--table-header-bg);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--card-border);
+    font-weight: 500;
+}
+.matches-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--text-secondary);
+}
+.matches-table tbody tr {
+    transition: background-color 0.2s;
+}
+.matches-table tbody tr:hover {
+    background: var(--table-row-hover);
+}
+.btn-delete-match {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+}
+.btn-delete-match:hover {
+    color: #ff7875;
+}
+
+.action-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border);
+}
+
+/* 9. 划词标注悬浮窗 (Ant Popover 风格) */
+.selection-bubble {
+    position: absolute;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius);
+    padding: 12px;
+    z-index: 1000;
+    width: 310px;
+    animation: antScaleIn 0.15s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.bubble-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+.bubble-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.bubble-btn {
+    background: var(--table-header-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.bubble-btn:hover {
+    background: var(--ant-primary-bg);
+    border-color: var(--ant-primary-hover);
+    color: var(--ant-primary);
+}
+
+/* 10. 成功落地页 */
+.success-screen {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+}
+.success-card {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    padding: 40px;
+}
+.success-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--success-bg);
+    color: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    border: 1px solid var(--success-border);
+}
+.success-card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.success-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+.download-box {
+    background: var(--table-header-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 16px 20px;
+    text-align: left;
+    margin-bottom: 24px;
+}
+.download-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.file-info {
+    display: flex;
+    flex-direction: column;
+}
+.file-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+.file-size {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+.success-actions {
+    display: flex;
+    justify-content: center;
+}
+
+/* 11. 还原密钥包卡片 */
+.key-upload-screen {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+}
+.key-card {
+    width: 100%;
+    max-width: 520px;
+    text-align: center;
+    padding: 32px;
+}
+.warning-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--warning-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    border: 1px solid var(--warning-border);
+}
+.key-card h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+.key-card p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+.key-drop-zone {
+    border: 1px dashed var(--card-border-hover);
+    background: var(--table-header-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+.key-drop-zone:hover {
+    border-color: var(--ant-primary);
+    background-color: var(--ant-primary-bg);
+}
+.key-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+/* 12. 规则管理卡片网格 */
+.rules-card {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+.rule-item {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 150px;
+    transition: all 0.2s;
+}
+.rule-item:hover {
+    border-color: var(--ant-primary-hover);
+    box-shadow: var(--shadow-sm);
+}
+.rule-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+.rule-title {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-primary);
+}
+.rule-desc {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-bottom: 12px;
+    flex: 1;
+}
+.rule-code {
+    background: var(--table-header-bg);
+    border: 1px solid var(--card-border);
+    padding: 4px 8px;
+    border-radius: 2px;
+    font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--tag-name-text);
+    margin-bottom: 12px;
+    word-break: break-all;
+}
+.rule-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.btn-delete-rule {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 纯 CSS Ant-Switch 开关 */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 18px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    transition: .2s;
+    border-radius: 100px;
+}
+body.dark-theme .slider {
+    background-color: rgba(255, 255, 255, 0.18);
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #fff;
+    transition: .2s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+input:checked + .slider {
+    background-color: var(--ant-primary);
+}
+input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+/* 13. 模态对话框 (Ant Modal 风格) */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.modal-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 24px;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-lg);
+    background: var(--card-bg);
+}
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.form-control {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus {
+    outline: none;
+    border-color: var(--ant-primary-hover);
+    box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.2);
+}
+.help-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: block;
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+/* 14. Toast 通知条 (Ant Message/Notification 风格，移动到页面底部居中) */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 12px;
+    z-index: 9999;
+}
+.toast {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 10px 16px;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    font-weight: 400;
+    box-shadow: var(--shadow-md);
+    min-width: 220px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: antSlideInUp 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.toast svg {
+    margin-right: 8px;
+}
+.toast-success { border-left-color: var(--success); }
+.toast-danger { border-left-color: var(--danger); }
+.toast-warning { border-left-color: var(--warning); }
+
+/* 15. 公共辅助间距 */
+.mt-2 { margin-top: 8px; }
+.mt-4 { margin-top: 16px; }
+.text-muted { color: var(--text-muted); }
+.hidden { display: none !important; }
+
+/* 16. 定位呼吸闪烁动画 */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(22, 119, 255, 0.8);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 10px 6px rgba(22, 119, 255, 0.4);
+        transform: scale(1.08);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(22, 119, 255, 0);
+        transform: scale(1);
+    }
+}
+.highlight-pulse {
+    animation: pulse-glow 1s ease-in-out;
+    z-index: 10;
+}
+
+/* 动画效果 */
+@keyframes antFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes antScaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes antSlideInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
