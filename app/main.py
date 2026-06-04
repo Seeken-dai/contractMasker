@@ -109,10 +109,43 @@ async def delete_rule(rule_id: int):
     彻底删除一条自定义的脱敏规则。内置标准规则不允许被删除。
     """
     try:
+        rule = db.get_rule_by_id(rule_id)
+        if not rule:
+            raise HTTPException(status_code=404, detail="该规则不存在")
+            
+        # 拦截所有内置标准规则
+        builtin_names = {
+            "手机号", "固定电话", "电子邮箱", "统一社会信用代码/税号", 
+            "银行卡号", "身份证号", "时间信息", "企业名称", "大写金额", "数值金额", "百分比", "人名"
+        }
+        if rule["name"] in builtin_names:
+            raise HTTPException(status_code=400, detail=f"标准内置规则【{rule['name']}】禁止删除")
+            
         db.delete_rule(rule_id)
         return {"message": "规则删除成功"}
+    except HTTPException as he:
+        raise he
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"删除规则失败: {str(e)}")
+
+
+@app.get("/api/config", tags=["配置管理"], summary="获取系统运行配置")
+async def get_config():
+    """
+    获取全局配置文件中自定义的产品名称等系统属性。
+    """
+    config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
+    app_name = "合同智能脱敏"
+    if os.path.exists(config_path):
+        try:
+            import json
+            with open(config_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, dict) and "app_name" in data:
+                    app_name = data["app_name"]
+        except Exception:
+            pass
+    return {"app_name": app_name}
 
 
 # --- 网页端脱敏交互流程 API ---

@@ -63,14 +63,28 @@ class DatabaseManager:
                 ("身份证号", r"[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]", 1, "匹配18位二代身份证号码"),
                 ("时间信息", r"\d{4}[-/年]\d{1,2}[-/月]\d{1,2}日?", 1, "匹配年月日等日期格式"),
                 ("企业名称", r"[\u4e00-\u9fa5]{4,}(?:有限公司|有限责任公司|集团|厂|商行|工作室)", 1, "匹配结尾为有限公司、集团等的中文机构名称"),
+                ("大写金额", r"(?:人民币)?\s*[零壹贰叁肆伍陆柒捌玖拾佰仟万亿角分整元圆]{2,}", 1, "匹配中文大写金额，如：人民币壹佰万元整、贰拾万元"),
+                ("数值金额", r"((?:[￥$€]|\b(?:RMB|USD))\s?\d+(?:,\d{3})*(?:\.\d{1,2})?|\d+(?:,\d{3})*(?:\.\d{1,2})?\s*[万亿]?元|\b[1-9]\d{1,}(?:,\d{3})*\.\d{2}\b(?!\s*%))", 1, "匹配带符号、中文单位的数值金额或不带单位的纯两位小数（排除了条款号与百分比），如：￥1,000.00、50万元、300.00"),
+                ("百分比", r"-?\d+(?:\.\d+)?\s*[%％]", 1, "匹配各种格式的百分比，如：12.5%、-5%、100％"),
                 ("人名", None, 1, "基于 Jieba 分词与词性标注(nr)初筛中文姓名，无固定正则")
             ]
 
             for name, pattern, is_enabled, description in default_rules:
-                cursor.execute("""
-                    INSERT OR IGNORE INTO rules (name, pattern, is_enabled, description)
-                    VALUES (?, ?, ?, ?)
-                """, (name, pattern, is_enabled, description))
+                cursor.execute("SELECT id FROM rules WHERE name = ?", (name,))
+                row = cursor.fetchone()
+                if row:
+                    # 已存在内置规则，强制更新 pattern 与 description 以修复规则 bug 或是更新描述
+                    cursor.execute("""
+                        UPDATE rules 
+                        SET pattern = ?, description = ? 
+                        WHERE name = ?
+                    """, (pattern, description, name))
+                else:
+                    # 不存在则安全插入
+                    cursor.execute("""
+                        INSERT INTO rules (name, pattern, is_enabled, description)
+                        VALUES (?, ?, ?, ?)
+                    """, (name, pattern, is_enabled, description))
             
             conn.commit()
 
@@ -110,6 +124,14 @@ class DatabaseManager:
                 WHERE id = ?
             """, (name, pattern, is_enabled, description, rule_id))
             conn.commit()
+
+    def get_rule_by_id(self, rule_id: int) -> Optional[Dict[str, Any]]:
+        """根据 ID 获取单个规则"""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, name, pattern, is_enabled, description FROM rules WHERE id = ?", (rule_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
 
     def delete_rule(self, rule_id: int):
         """删除规则"""

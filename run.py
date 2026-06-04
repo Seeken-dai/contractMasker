@@ -5,14 +5,38 @@ import subprocess
 
 def start_server():
     current_os = platform.system()
-    print("=" * 60)
-    print("         合同智能脱敏系统启动器 (跨平台版)")
-    print("=" * 60)
-    print(f"[检测] 当前运行操作系统: {current_os}")
     
     # 获取当前工作目录
     working_dir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(working_dir)
+    
+    # 默认配置
+    host = "127.0.0.1"
+    port = 8000
+    app_name = "合同智能脱敏"
+    
+    # 提前加载 config.json 配置文件以获取产品名称
+    config_path = os.path.join(working_dir, "config.json")
+    has_config = os.path.exists(config_path)
+    if has_config:
+        try:
+            import json
+            with open(config_path, "r", encoding="utf-8") as f:
+                config_data = json.load(f)
+                if isinstance(config_data, dict):
+                    if "host" in config_data:
+                        host = str(config_data["host"])
+                    if "port" in config_data:
+                        port = int(config_data["port"])
+                    if "app_name" in config_data:
+                        app_name = str(config_data["app_name"])
+        except Exception:
+            pass
+
+    print("=" * 60)
+    print(f"         {app_name}系统启动器 (跨平台版)")
+    print("=" * 60)
+    print(f"[检测] 当前运行操作系统: {current_os}")
     
     # 检查并自动安装缺失的依赖
     print("[检查] 正在校验 Python 第三方库依赖...")
@@ -50,31 +74,14 @@ def start_server():
     else:
         print("[环境] 校验通过，所有运行库已就绪。")
         
-    # 默认配置
-    host = "127.0.0.1"
-    port = 8000
-    
-    # 尝试加载 config.json 配置文件
-    config_path = os.path.join(working_dir, "config.json")
-    if os.path.exists(config_path):
-        try:
-            import json
-            with open(config_path, "r", encoding="utf-8") as f:
-                config_data = json.load(f)
-                if isinstance(config_data, dict):
-                    if "host" in config_data:
-                        host = str(config_data["host"])
-                    if "port" in config_data:
-                        port = int(config_data["port"])
-            print(f"[配置] 成功加载本地配置文件 config.json (主机: {host}, 端口: {port})")
-        except Exception as e:
-            print(f"[警告] 读取配置文件 config.json 失败或格式错误，将使用默认配置。细节: {e}")
+    if has_config:
+        print(f"[配置] 成功加载本地配置文件 config.json (主机: {host}, 端口: {port})")
     else:
         # 如果配置文件不存在，自动生成一个默认配置的 config.json，方便用户后续修改
         try:
             import json
             with open(config_path, "w", encoding="utf-8") as f:
-                json.dump({"host": "127.0.0.1", "port": 8000}, f, indent=4, ensure_ascii=False)
+                json.dump({"host": "127.0.0.1", "port": 8000, "app_name": "合同智能脱敏"}, f, indent=4, ensure_ascii=False)
             print("[配置] 未找到配置文件，已在根目录自动生成默认 config.json 模板文件。")
         except Exception as e:
             pass

@@ -32,10 +32,14 @@ const categoryClasses = {
     '时间信息': 'contact',
     '银行卡号': 'finance',
     '统一社会信用代码/税号': 'finance',
-    '身份证号': 'finance'
+    '身份证号': 'finance',
+    '大写金额': 'finance',
+    '数值金额': 'finance',
+    '百分比': 'finance'
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    loadSystemConfig();
     initTheme();
     initNavigation();
     initUploadEvents();
@@ -788,7 +792,7 @@ function renderRulesGrid() {
         div.className = 'rule-item';
         
         // 区分内置和自定义规则 (内置规则前 9 项一般不可以随便删除，或者我们根据 pattern 和名称加锁)
-        const isBuiltin = ["手机号", "固定电话", "电子邮箱", "统一社会信用代码/税号", "银行卡号", "身份证号", "时间信息", "企业名称", "人名"].includes(rule.name);
+        const isBuiltin = ["手机号", "固定电话", "电子邮箱", "统一社会信用代码/税号", "银行卡号", "身份证号", "时间信息", "企业名称", "大写金额", "数值金额", "百分比", "人名"].includes(rule.name);
         
         div.innerHTML = `
             <div>
@@ -968,4 +972,30 @@ function escapeHtml(string) {
     return lastIndex !== index
         ? html + str.substring(lastIndex, index)
         : html;
+}
+
+// --- 加载系统配置（自定义产品名称） ---
+async function loadSystemConfig() {
+    try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+            const data = await response.json();
+            if (data.app_name) {
+                // 1. 替换网页 Title
+                document.title = data.app_name;
+                // 2. 替换左上角 Logo 中的文本
+                const logoEl = document.getElementById('logo-text');
+                if (logoEl) {
+                    if (data.app_name.includes("智能脱敏")) {
+                        const htmlContent = escapeHtml(data.app_name).replace("智能脱敏", '<span class="logo-accent">智能脱敏</span>');
+                        logoEl.innerHTML = htmlContent;
+                    } else {
+                        logoEl.innerText = data.app_name;
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        console.error("加载系统配置失败:", e);
+    }
 }

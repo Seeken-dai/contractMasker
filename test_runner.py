@@ -50,6 +50,33 @@ def create_test_document(file_path):
     
     p1.add_run(" 起生效。")
     
+    p2 = doc.add_paragraph()
+    p2.add_run("本合同的含税总金额为 ")
+    
+    # 中文大写金额
+    r_cap_money = p2.add_run("人民币壹佰万元整")
+    r_cap_money.bold = True
+    
+    p2.add_run("（小写：")
+    
+    # 带￥符号金额
+    r_num_money1 = p2.add_run("￥1000000.00")
+    r_num_money1.italic = True
+    
+    p2.add_run("），其中包含系统服务费 ")
+    
+    # 数字+中文单位金额
+    r_num_money2 = p2.add_run("20.5万元")
+    r_num_money2.font.color.rgb = RGBColor(0, 128, 0) # 绿色
+    
+    p2.add_run(" 以及技术支持费 ")
+    
+    # 纯两位小数金额
+    r_num_money3 = p2.add_run("300.00")
+    r_num_money3.underline = True
+    
+    p2.add_run(" 元。本合同第 3.12 条所占百分比为 5.50%，条款序号：(1 ) 总体技术要求、(2)安全需求，这四者均不应被误伤识别为数值金额。")
+    
     # 表格测试
     table = doc.add_table(rows=2, cols=2)
     hdr_cells = table.rows[0].cells
@@ -74,6 +101,15 @@ def run_integration_test():
     test_dir = os.path.dirname(os.path.abspath(__file__))
     original_path = os.path.join(test_dir, "test_original.docx")
     
+    # 强制清理本地 masking.db，以保证测试始终拉取到最新内置金额规则
+    db_path = os.path.join(test_dir, "masking.db")
+    if os.path.exists(db_path):
+        try:
+            os.remove(db_path)
+            print("[测试] 已清理旧数据库以加载最新金额规则。")
+        except Exception as e:
+            print(f"[测试] 清理数据库失败: {e}")
+            
     # 1. 创建测试文档
     create_test_document(original_path)
     
