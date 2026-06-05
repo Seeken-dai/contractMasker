@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- 主题切换逻辑 (Ant Design Light/Dark Switcher) ---
 function initTheme() {
     const themeBtn = document.getElementById('btn-theme-toggle');
+    if (!themeBtn) return;
     const sunIcon = themeBtn.querySelector('.sun-icon');
     const moonIcon = themeBtn.querySelector('.moon-icon');
     
@@ -93,7 +94,17 @@ function initTheme() {
 
 // --- 导航切换 ---
 function initNavigation() {
-    document.querySelectorAll('.nav-tab').forEach(tab => {
+    const tabs = document.querySelectorAll('.nav-tab');
+    if (tabs.length === 0) {
+        // 独立页面模式：自适应激活状态
+        if (document.getElementById('tab-mask')) {
+            state.activeTab = 'tab-mask';
+        } else if (document.getElementById('tab-restore')) {
+            state.activeTab = 'tab-restore';
+        }
+        return;
+    }
+    tabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const target = tab.dataset.target;
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -397,6 +408,7 @@ function scrollToTag(block_idx, start, end) {
 function initSelectionBubble() {
     const bubble = document.getElementById('selection-bubble');
     const viewer = document.getElementById('doc-viewer');
+    if (!bubble || !viewer) return;
     
     // 划词鼠标抬起事件
     viewer.addEventListener('mouseup', handleTextSelection);
@@ -546,7 +558,10 @@ function hideBubble() {
 
 // --- 执行脱敏操作 ---
 function initMaskingEvents() {
-    document.getElementById('btn-cancel-mask').addEventListener('click', () => {
+    const cancelBtn = document.getElementById('btn-cancel-mask');
+    if (!cancelBtn) return;
+    
+    cancelBtn.addEventListener('click', () => {
         state.maskFile = null;
         state.fileToken = null;
         state.matches = [];
@@ -626,6 +641,7 @@ function initMaskingEvents() {
 function initRestoreEvents() {
     const keyInput = document.getElementById('key-file-input');
     const keyDropZone = document.getElementById('key-drop-zone');
+    if (!keyInput || !keyDropZone) return;
     
     // 拖拽密钥
     ['dragenter', 'dragover'].forEach(eventName => {
@@ -785,6 +801,7 @@ async function loadRules() {
 
 function renderRulesGrid() {
     const container = document.getElementById('rules-container');
+    if (!container) return;
     container.innerHTML = '';
     
     state.rules.forEach(rule => {
@@ -850,6 +867,7 @@ function initRulesEvents() {
     const addBtn = document.getElementById('btn-add-rule');
     const closeBtn = document.getElementById('btn-close-modal');
     const saveBtn = document.getElementById('btn-save-rule');
+    if (!modal || !addBtn || !closeBtn || !saveBtn) return;
     
     addBtn.addEventListener('click', () => {
         // 清空表单

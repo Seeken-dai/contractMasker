@@ -12,11 +12,13 @@ from pydantic import BaseModel, Field
 from app.database import DatabaseManager
 from app.masker import DocxMasker
 
+SYSTEM_VERSION = "1.2.0"
+
 # 初始化 FastAPI，配置中文元数据说明
 app = FastAPI(
-    title="合同智能脱敏系统 API 接口文档",
+    title="合同智能脱敏服务 API 接口文档",
     description="本接口文档提供了供外部系统（如 OA、审批流、档案管理等系统）对接合同脱敏与还原功能的标准 RESTful API。",
-    version="1.0.0"
+    version=SYSTEM_VERSION
 )
 
 # 跨域设置
@@ -132,7 +134,7 @@ async def delete_rule(rule_id: int):
 @app.get("/api/config", tags=["配置管理"], summary="获取系统运行配置")
 async def get_config():
     """
-    获取全局配置文件中自定义的产品名称等系统属性。
+    获取全局配置文件中自定义的产品名称等系统属性以及系统版本号。
     """
     config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
     app_name = "合同智能脱敏"
@@ -145,7 +147,23 @@ async def get_config():
                     app_name = data["app_name"]
         except Exception:
             pass
-    return {"app_name": app_name}
+    return {"app_name": app_name, "version": SYSTEM_VERSION}
+
+
+@app.get("/mask", tags=["独立功能页面"], summary="访问独立文档脱敏页面")
+async def get_mask_page():
+    """
+    为普通用户提供安全的独立文档脱敏页面，不包含配置管理等敏感模块。
+    """
+    return FileResponse("static/mask.html")
+
+
+@app.get("/restore", tags=["独立功能页面"], summary="访问独立文档还原页面")
+async def get_restore_page():
+    """
+    为普通用户提供安全的独立文档还原页面，不包含配置管理等敏感模块。
+    """
+    return FileResponse("static/restore.html")
 
 
 # --- 网页端脱敏交互流程 API ---

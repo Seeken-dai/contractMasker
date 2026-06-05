@@ -14,8 +14,9 @@ def start_server():
     host = "127.0.0.1"
     port = 8000
     app_name = "合同智能脱敏"
+    version = "1.2.0"
     
-    # 提前加载 config.json 配置文件以获取产品名称
+    # 提前加载 config.json 配置文件以获取产品名称与版本号
     config_path = os.path.join(working_dir, "config.json")
     has_config = os.path.exists(config_path)
     if has_config:
@@ -30,11 +31,13 @@ def start_server():
                         port = int(config_data["port"])
                     if "app_name" in config_data:
                         app_name = str(config_data["app_name"])
+                    if "version" in config_data:
+                        version = str(config_data["version"])
         except Exception:
             pass
 
     print("=" * 60)
-    print(f"         {app_name}系统启动器 (跨平台版)")
+    print(f"         {app_name}系统启动器 v{version} (跨平台版)")
     print("=" * 60)
     print(f"[检测] 当前运行操作系统: {current_os}")
     
@@ -81,7 +84,7 @@ def start_server():
         try:
             import json
             with open(config_path, "w", encoding="utf-8") as f:
-                json.dump({"host": "127.0.0.1", "port": 8000, "app_name": "合同智能脱敏"}, f, indent=4, ensure_ascii=False)
+                json.dump({"host": "127.0.0.1", "port": 8000, "app_name": "合同智能脱敏", "version": "1.2.0"}, f, indent=4, ensure_ascii=False)
             print("[配置] 未找到配置文件，已在根目录自动生成默认 config.json 模板文件。")
         except Exception as e:
             pass

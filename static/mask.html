@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合同智能脱敏服务</title>
+    <!-- 引入 Outfit 与 Inter 字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 头部导航（去除了切换页签） -->
+        <header class="app-header">
+            <div class="logo">
+                <!-- 自设计盾牌带锁小 Logo -->
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <rect x="9" y="11" width="6" height="5" rx="1" ry="1"></rect>
+                    <path d="M10 11V9a2 2 0 0 1 4 0v2"></path>
+                </svg>
+                <span id="logo-text">合同<span class="logo-accent">智能脱敏</span></span>
+            </div>
+            <div class="header-actions">
+                <button class="btn-theme-toggle" id="btn-theme-toggle" title="切换亮/暗色模式">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon hidden">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- 主内容区域 -->
+        <main class="app-content">
+            <!-- 仅有文档脱敏页面 -->
+            <section id="tab-mask" class="tab-panel active">
+                <!-- 初始上传状态 -->
+                <div class="upload-screen" id="mask-upload-screen">
+                    <div class="upload-card" id="mask-drop-zone">
+                        <input type="file" id="mask-file-input" accept=".docx" hidden>
+                        <div class="upload-icon-wrapper">
+                            <svg class="upload-svg" viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="12" y1="18" x2="12" y2="12"></line>
+                                <polyline points="9 15 12 12 15 15"></polyline>
+                            </svg>
+                        </div>
+                        <h3>拖拽合同文件 (.docx) 到这里</h3>
+                        <p>支持多段落与表格高保真解析，保障敏感资产完全隔离</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('mask-file-input').click()">浏览本地文件</button>
+                    </div>
+                </div>
+
+                <!-- 交互式对比与标注状态 -->
+                <div class="interactive-screen hidden" id="mask-interactive-screen">
+                    <div class="split-layout">
+                        <!-- 左侧：在线预览与划词 -->
+                        <div class="preview-panel glass-card">
+                            <div class="panel-header">
+                                <h2>合同内容预览</h2>
+                                <span class="badge badge-info">鼠标划词即可手动归类敏感信息</span>
+                            </div>
+                            <div class="document-viewer" id="doc-viewer">
+                                <!-- 动态注入合同 HTML -->
+                            </div>
+                        </div>
+
+                        <!-- 右侧：标注列表与脱敏控制 -->
+                        <div class="control-panel glass-card">
+                            <div class="panel-header">
+                                <h2>识别到的敏感词</h2>
+                                <span class="badge" id="match-count-badge">0 个</span>
+                            </div>
+                            
+                            <div class="category-legend">
+                                <span><span class="legend-color legend-name"></span>人名</span>
+                                <span><span class="legend-color legend-corp"></span>企业名称</span>
+                                <span><span class="legend-color legend-contact"></span>联系方式</span>
+                                <span><span class="legend-color legend-finance"></span>银行与税务</span>
+                                <span><span class="legend-color legend-other"></span>其它</span>
+                            </div>
+
+                            <div class="matches-list-wrapper">
+                                <table class="matches-table">
+                                    <thead>
+                                        <tr>
+                                            <th>敏感词文本</th>
+                                            <th>类别</th>
+                                            <th>占位符代号</th>
+                                            <th style="text-align: right;">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="matches-table-body">
+                                        <!-- 动态注入敏感词记录 -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="action-footer">
+                                <button class="btn btn-outline" id="btn-cancel-mask">重新上传</button>
+                                <button class="btn btn-primary" id="btn-execute-mask">一键脱敏导出</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 脱敏结果展示 -->
+                <div class="success-screen hidden" id="mask-success-screen">
+                    <div class="success-card glass-card">
+                        <div class="success-icon-wrapper">
+                            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h2>合同脱敏处理成功！</h2>
+                        <p class="success-desc">原文件中的敏感字段已安全替换为高保真占位符，排版与结构已锁定。</p>
+                        
+                        <div class="download-box">
+                            <div class="download-item">
+                                <div class="file-info">
+                                    <span class="file-name" id="masked-file-name">document_masked.docx</span>
+                                    <span class="file-size">样式结构已高精度锁定，兼容原有排版</span>
+                                </div>
+                                <a href="#" id="download-doc-link" class="btn btn-primary">下载脱敏 Word</a>
+                            </div>
+                            <div class="download-item mt-4">
+                                <div class="file-info">
+                                    <span class="file-name" id="key-file-name">document_key.json</span>
+                                    <span class="file-size">本地数据库已安全同步关联。此文件可用于跨电脑还原。</span>
+                                </div>
+                                <button id="download-key-btn" class="btn btn-secondary">下载密钥包备份</button>
+                            </div>
+                        </div>
+
+                        <div class="success-actions">
+                            <button class="btn btn-outline" id="btn-restart-mask">处理下一份合同</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 划词标注弹窗气泡 -->
+    <div class="selection-bubble hidden" id="selection-bubble">
+        <div class="bubble-title">标注敏感词为：</div>
+        <div class="bubble-buttons">
+            <button class="bubble-btn" data-category="人名">人名</button>
+            <button class="bubble-btn" data-category="企业名称">企业名</button>
+            <button class="bubble-btn" data-category="手机号">手机号</button>
+            <button class="bubble-btn" data-category="电子邮箱">邮箱</button>
+            <button class="bubble-btn" data-category="银行卡号">银行卡</button>
+            <button class="bubble-btn" data-category="统一社会信用代码/税号">税号/信用码</button>
+            <button class="bubble-btn" data-category="时间信息">时间</button>
+            <button class="bubble-btn" data-category="大写金额">大写金额</button>
+            <button class="bubble-btn" data-category="数值金额">数值金额</button>
+            <button class="bubble-btn" data-category="百分比">百分比</button>
+        </div>
+    </div>
+
+    <!-- Toast 容器 -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
